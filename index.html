@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WarpDancer</title>
+<style>
+/* ==========================================================
+   CONFIG: edit these values to change the look.
+   Do not define these values anywhere else in the file.
+   ========================================================== */
+:root {
+  --bg: #000000;
+  --text: #FFFFFF;
+  --accent: #00FF88;
+  --red: #FF0040;
+  --muted: rgba(255, 255, 255, 0.6);
+}
+
+/* Reset only. Styling comes in step 2. */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  font-size: 1.125rem;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section {
+  padding-bottom: clamp(80px, 12vw, 160px);
+}
+
+#hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#hero h1 {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 700;
+  margin-top: 0;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+#hero p {
+  margin-bottom: 2rem;
+}
+
+.button {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 14px 28px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+.button:focus {
+  outline: 2px solid var(--accent);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.highlight {
+  color: var(--accent);
+}
+
+
+
+.point {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  align-items: baseline;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 1rem 0;
+}
+
+.point .label {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-weight: bold;
+}
+
+#machines table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#machines th, #machines td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: left;
+}
+
+#machines thead th {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+#extras {
+  max-width: 65ch;
+}
+
+#contact {
+  max-width: 400px;
+}
+
+input, textarea {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 4px;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+label {
+  display: block;
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+
+footer {
+  padding: 2rem 24px;
+  color: var(--muted);
+}
+header, main, footer { max-width: 1100px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
+#hero .button { align-self: flex-start; }
+p { max-width: 65ch; }
+
+form .button { margin-top: 1.5rem; align-self: flex-start; }
+
+html, body { background: var(--bg); margin: 0; }
+#bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+main, header, footer, section { position: relative; z-index: 1; }
+
+.renting { color: var(--red); }
+#hero .brand { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.875rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+@media (max-width: 720px) {
+  #why {
+    grid-template-columns: 1fr;
+  }
+  
+  #extras, #contact {
+    max-width: 100%;
+  }
+  
+  .container {
+    padding: 0 20px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Background pattern canvas. Filled in during step 3. -->
+<canvas id="bg"></canvas>
+
+<header id="hero">
+  <p class="brand">WarpDancer</p>
+  <h1>Stop <span class="renting">renting</span> your intelligence. <span class="highlight">Own</span> it.</h1>
+  <p>The big AI labs are like Uber. If you drive every day, you buy a car. We sell ready-made local AI machines, so you buy the hardware once and then pay only for electricity.</p>
+  <a href="#contact" class="button">Book a call</a>
+</header>
+
+<main>
+
+  <section id="why">
+    <h2>Why own it</h2>
+
+    <div class="point">
+      <span class="label">01</span>
+      <p>Cloud AI subscriptions are priced below what they cost to provide. Prices tend to rise over time, as they did with Uber and Netflix. A machine you own does not get more expensive.</p>
+    </div>
+
+    <div class="point">
+      <span class="label">02</span>
+      <p>Many companies cannot send sensitive data to an outside API. Local AI keeps your data in your building.</p>
+    </div>
+
+    <div class="point">
+      <span class="label">03</span>
+      <p>Open models you can run yourself are now close to the frontier. When a better model comes out, it can be installed on the same hardware.</p>
+    </div>
+  </section>
+
+  <section id="machines">
+    <h2>The three machines</h2>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Small</th>
+          <th>Medium</th>
+          <th>Large</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Model</th>
+          <td>About 12B</td>
+          <td>About 70B</td>
+          <td>Close to frontier</td>
+        </tr>
+        <tr>
+          <th>GPU</th>
+          <td>One RTX 5090</td>
+          <td>One RTX PRO 6000 Blackwell</td>
+          <td>Four to eight data center GPUs</td>
+        </tr>
+        <tr>
+          <th>Best for</th>
+          <td>Chat, documents and forms</td>
+          <td>Everyday coding and agents</td>
+          <td>Heavy coding on big projects</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>All three run the same agent harness and use open weights.</p>
+  </section>
+
+  <section id="extras">
+    <h2>Optional extras</h2>
+    <p>If you want a model tuned to your own work, an engineer sets it up for you. Custom fine-tuning and engineer time are billed monthly, because the tuning has to be repeated as your data changes.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Book a call</h2>
+    <form>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name">
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email">
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="5"></textarea>
+
+      <button type="submit" class="button">Send</button>
+    </form>
+  </section>
+
+</main>
+
+<footer>
+  <p>WarpDancer, 2026</p>
+</footer>
+
+<script>
+/* ==========================================================
+   CONFIG: pattern settings. Used in step 3.
+   ========================================================== */
+const DOT_SPACING = 28;
+const DOT_SIZE = 1.6;
+const MOUSE_RADIUS = 140;
+const MOUSE_STRENGTH = 2.2;
+const DRIFT_SPEED = 0.0004;
+
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00FF88';
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let w = 0, h = 0, dots = [];
+const mouse = { x: -9999, y: -9999, active: false };
+
+function build() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  w = window.innerWidth;
+  h = window.innerHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  let spacing = DOT_SPACING;
+  while ((w / spacing) * (h / spacing) > 3000) spacing += 2; // cap the dot count
+
+  dots = [];
+  for (let y = spacing / 2; y < h; y += spacing) {
+    for (let x = spacing / 2; x < w; x += spacing) {
+      dots.push({ hx: x, hy: y, x: x, y: y, vx: 0, vy: 0 });
+    }
+  }
+}
+
+function frame(time) {
+  // No real mouse: a virtual cursor drifts across the screen.
+  if (!mouse.active) {
+    mouse.x = w / 2 + Math.cos(time * DRIFT_SPEED * 3) * w * 0.35;
+    mouse.y = h / 2 + Math.sin(time * DRIFT_SPEED * 5) * h * 0.30;
+  }
+
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = accent;
+
+  for (const d of dots) {
+    const dx = d.x - mouse.x;
+    const dy = d.y - mouse.y;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    let near = 0;
+
+    if (dist < MOUSE_RADIUS) {
+      near = 1 - dist / MOUSE_RADIUS;
+      d.vx += (dx / dist) * near * MOUSE_STRENGTH;
+      d.vy += (dy / dist) * near * MOUSE_STRENGTH;
+    }
+
+    // spring back to the home position, with damping
+    d.vx += (d.hx - d.x) * 0.06;
+    d.vy += (d.hy - d.y) * 0.06;
+    d.vx *= 0.82;
+    d.vy *= 0.82;
+    d.x += d.vx;
+    d.y += d.vy;
+
+    ctx.globalAlpha = 0.18 + 0.82 * near;
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, DOT_SIZE * (1 + near * 1.5), 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(frame);
+}
+
+function drawStatic() {
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = accent;
+  ctx.globalAlpha = 0.18;
+  for (const d of dots) {
+    ctx.beginPath();
+    ctx.arc(d.hx, d.hy, DOT_SIZE, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+window.addEventListener('pointermove', (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+  mouse.active = true;
+});
+document.addEventListener('mouseleave', () => { mouse.active = false; });
+window.addEventListener('pointerup', (e) => { if (e.pointerType === 'touch') mouse.active = false; });
+window.addEventListener('resize', () => { build(); if (reduceMotion) drawStatic(); });
+
+build();
+if (reduceMotion) drawStatic();
+else requestAnimationFrame(frame);
+</script>
+
+</body>
+</html>
