@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Use in steps 1 and 2 of the workflow, for page structure, typography, layout and spacing. A short design guide for a black and white site with one accent color.
+description: Use whenever you build or change the look of the WarpDancer site, including page structure, colors, typography, layout, spacing, components and responsive behavior. Read before any styling edit.
 ---
 
 # Frontend design for WarpDancer
@@ -16,7 +16,9 @@ Direction is fixed: stark, technical, quiet. Black background, white text, one a
 - `--bg: #000000`, `--text: #FFFFFF`, `--accent: #00FF88`.
 - `--muted: rgba(255,255,255,0.6)` for secondary text. Borders: `rgba(255,255,255,0.15)`.
 - The accent is used for: the button, links, one highlight word in the hero, the background pattern. Nothing else.
-- No gradients, no shadows, no glow, no second accent.
+- One exception: `--red: #FF0040` is used only for the word "renting" in the tagline (class `.renting`).
+- All colors live in the `:root` block at the top. Never write a hex color anywhere else. Use `var(--bg)` for text on the accent button.
+- No gradients, no shadows, no glow, no other accent.
 
 ## Typography
 
@@ -32,7 +34,7 @@ Direction is fixed: stark, technical, quiet. Black background, white text, one a
 - Page container: `max-width: 1100px; margin: 0 auto; padding: 0 24px`.
 - Vertical rhythm: sections separated by `clamp(80px, 12vw, 160px)`.
 - Vary the layout between sections so the page does not feel repetitive:
-  - Hero: large heading, one sentence, one button, lots of empty space. Full viewport height.
+  - Hero: small wordmark above the tagline (`#hero .brand`: monospace, small, uppercase, letter-spaced, muted, `margin-bottom: 0.5rem`), the large heading with `margin-top: 0` (browsers add a big default top margin to `h1`), a short paragraph, one button that does not stretch (`align-self: flex-start`). Lots of empty space. Full viewport height.
   - Why own it: a two-column layout on desktop. A small numbered label (01, 02, 03) on the left, prose on the right. Rows separated by thin borders.
   - Machines: a table with thin borders, one column per machine. On phones it becomes stacked blocks.
   - Extras: a short paragraph and a plain list, with a narrow text column.
@@ -67,8 +69,15 @@ Direction is fixed: stark, technical, quiet. Black background, white text, one a
 - No fake logos, testimonials or statistics.
 - No em dashes or en dashes in text or comments.
 
+## Working on an existing page
+
+- Make small edits. Keep each edit to a few lines. Never replace a whole section or the whole `<style>` block.
+- Add new rules just before the `@media` rule. Keep the CONFIG block at the top unchanged except for new variables.
+- When adding a section, copy the structure of an existing section (heading, then content) and reuse its classes.
+- After a styling change, re-check the Never list and the colors check below.
+
 ## Check
 
 - Resize the window from 360px to 1600px. Nothing overlaps or overflows.
-- Count the colors: black, white, greys from white, one accent. Nothing else.
+- Count the colors: black, white, greys from white, `--accent`, and `--red` for one word. Nothing else.
 - Squint test: the hero heading is clearly the most important thing on the page.

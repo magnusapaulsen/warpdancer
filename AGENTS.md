@@ -22,12 +22,12 @@ Your job: build a one-page marketing website as ONE file, `index.html`.
 
 ## Workflow
 
-Do the steps in order. Finish and check one step before starting the next. If a `skills/` folder exists, read the matching skill file before the step.
+Do the steps in order. Finish and check one step before starting the next. If a `.agents/skills/` folder exists, read the matching skill file before the step.
 
 1. Skeleton: HTML structure with all sections and placeholder-free real text. No styling beyond a reset.
 2. Styling: colors, typography, layout. Use the CONFIG variables only.
-3. Background pattern: canvas with mouse reaction (`skills/mouse-pattern/SKILL.md`).
-4. Copy pass: check all text against the writing rules (`skills/copy-rules/SKILL.md`).
+3. Background pattern: canvas with mouse reaction (`.agents/skills/mouse-pattern/SKILL.md`).
+4. Copy pass: check all text against the writing rules (`.agents/skills/copy-rules/SKILL.md`).
 5. Final check: run the checklist at the bottom. Fix every failure.
 
 After each step, say in one or two lines what you changed. Do not explain the code at length.

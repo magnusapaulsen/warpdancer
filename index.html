@@ -1,392 +1,589 @@
+<!--
+CONFIG
+CSS Variables
+--accent: #00FF88
+--red: #FF0040
+--bg: #000000
+--text: #FFFFFF
+--muted: rgba(255,255,255,0.6)
+--border: rgba(255,255,255,0.15)
+
+JS Constants
+DOT_SPACING: 28
+DOT_SIZE: 1.6
+MOUSE_RADIUS: 140
+MOUSE_STRENGTH: 2.2
+DRIFT_SPEED: 0.0004
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WarpDancer</title>
-<style>
-/* ==========================================================
-   CONFIG: edit these values to change the look.
-   Do not define these values anywhere else in the file.
-   ========================================================== */
-:root {
-  --bg: #000000;
-  --text: #FFFFFF;
-  --accent: #00FF88;
-  --red: #FF0040;
-  --muted: rgba(255, 255, 255, 0.6);
-}
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400..900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WarpDancer</title>
+    <style>
+        :root {
+            --accent: #00FF88;
+            --red: #FF0040;
+            --bg: #000000;
+            --text: #FFFFFF;
+            --muted: rgba(255,255,255,0.6);
+            --border: rgba(255,255,255,0.15);
+        }
 
-/* Reset only. Styling comes in step 2. */
-*, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); }
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.6;
-  font-size: 1.125rem;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-#hero h1, #hero p:not(.brand) {
-  font-family: Lora, Georgia, "Times New Roman", serif;
-}
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
+        #bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
 
-section {
-  padding-bottom: clamp(80px, 12vw, 160px);
-}
+        main, header, footer, section {
+            position: relative;
+            z-index: 1;
+        }
 
-#hero {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
 
-#hero h1 {
-  font-size: clamp(2.5rem, 7vw, 5.5rem);
-  font-weight: 700;
-  margin-top: 0;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  margin-bottom: 1rem;
-}
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
 
-#hero p {
-  margin-bottom: 2rem;
-}
+        #hero .container {
+            width: 100%;
+            max-width: 1200px;
+        }
 
-.button {
-  display: inline-block;
-  background: var(--accent);
-  color: var(--bg);
-  padding: 14px 28px;
-  border-radius: 4px;
-  font-weight: 600;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-}
+        #why {
+            margin-bottom: 8rem;
+        }
 
-.button:hover {
-  opacity: 0.8;
-}
+        #machines {
+            margin-bottom: 8rem;
+        }
 
-.button:focus {
-  outline: 2px solid var(--accent);
-}
+        #extras {
+            margin-bottom: 8rem;
+        }
 
-a {
-  color: var(--accent);
-  text-decoration: underline;
-}
+        #hero h1 {
+            font-family: Lora, Georgia, "Times New Roman", serif;
+            font-size: clamp(3.5rem, 12vw, 7rem);
+            max-width: 100%;
+            line-height: 1.1;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+        }
 
-a:hover {
-  text-decoration: none;
-}
+        .brand {
+            font-family: Lora, Georgia, "Times New Roman", serif;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin: 0 auto 1rem auto;
+            text-align: center;
+            max-width: 65ch;
+        }
 
-.highlight {
-  color: var(--accent);
-}
+        .renting {
+            color: var(--red);
+        }
 
+        .highlight {
+            color: var(--accent);
+        }
 
+        h2 {
+            font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+            font-weight: 600;
+            margin-bottom: 2rem;
+            max-width: 65ch;
+        }
 
-.point {
-  display: grid;
-  grid-template-columns: 4rem 1fr;
-  align-items: baseline;
-  gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 1rem 0;
-}
+        p {
+            max-width: 65ch;
+            margin-bottom: 1.5rem;
+        }
 
-.point .label {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-weight: bold;
-}
+        .subtitle {
+            font-family: Lora, Georgia, "Times New Roman", serif;
+            font-size: 1.25rem;
+            max-width: 80ch;
+            margin: 0 auto;
+        }
 
-#machines table {
-  width: 100%;
-  border-collapse: collapse;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
+        .no-wrap {
+            white-space: nowrap;
+        }
 
-#machines th, #machines td {
-  padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  text-align: left;
-}
+        #hero p {
+            max-width: 80ch;
+        }
+        
+        .button {
+            position: relative;
+            isolation: isolate;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 14px 24px 14px 28px;
+            background: var(--accent);
+            color: var(--bg);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            text-decoration: none;
+            cursor: pointer;
+            overflow: hidden;
+            transition: color 0.25s ease, transform 0.1s ease;
+            margin-top: 2rem;
+        }
 
-#machines thead th {
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+        .button::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: var(--bg);
+            transform: translateX(-101%);
+            transition: transform 0.3s ease;
+        }
 
-#extras {
-  max-width: 65ch;
-}
+        .button::after {
+            content: "";
+            width: 0.5em;
+            height: 0.5em;
+            border-top: 2px solid currentColor;
+            border-right: 2px solid currentColor;
+            transform: rotate(45deg);
+            transition: transform 0.25s ease;
+        }
 
-#contact {
-  max-width: 400px;
-}
+        .button:hover,
+        .button:focus-visible {
+            color: var(--accent);
+            background: transparent;
+        }
 
-input, textarea {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: var(--text);
-  padding: 12px 14px;
-  border-radius: 4px;
-  width: 100%;
-  margin-top: 0.5rem;
-}
+        .button:hover::before,
+        .button:focus-visible::before {
+            transform: translateX(0);
+            background: transparent;
+        }
 
-input:focus, textarea:focus {
-  border-color: var(--accent);
-  outline: none;
-}
+        .button:hover::after,
+        .button:focus-visible::after {
+            transform: translateX(4px) rotate(45deg);
+        }
 
-label {
-  display: block;
-  margin-top: 1.5rem;
-  font-weight: 600;
-}
+        .button:active {
+            transform: translateY(1px);
+        }
 
-footer {
-  padding: 2rem 24px;
-  color: var(--muted);
-}
-header, main, footer { max-width: 1100px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
-#hero .button { align-self: flex-start; }
-p { max-width: 65ch; }
+        .button:focus-visible {
+            outline: 2px solid var(--text);
+            outline-offset: 3px;
+        }
 
-form .button { margin-top: 1.5rem; align-self: flex-start; }
+        @media (prefers-reduced-motion: reduce) {
+            .button,
+            .button::before,
+            .button::after {
+                transition: none;
+            }
+        }
 
-html, body { background: var(--bg); margin: 0; }
-#bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-main, header, footer, section { position: relative; z-index: 1; }
+        .why-section {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+            align-items: start;
+        }
 
-.renting { color: var(--red); }
-#hero .brand { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.875rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
-@media (max-width: 720px) {
-  #why {
-    grid-template-columns: 1fr;
-  }
-  
-  #extras, #contact {
-    max-width: 100%;
-  }
-  
-  .container {
-    padding: 0 20px;
-  }
-}
+        .why-item {
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
 
-</style>
+        .why-num {
+            font-family: inherit;
+            color: var(--muted);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .machines-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+            perspective: 1000px;
+        }
+
+        .machine-card {
+            position: relative;
+            height: 400px;
+            background: #010101;
+            border: 1px solid var(--accent);
+            border-radius: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            font-family: ui-monospace, monospace;
+            overflow: hidden;
+        }
+
+        .machine-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(220, 255, 240, 0.1) 0%, 
+                transparent 25%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .machine-card:hover::before {
+            opacity: 1;
+        }
+
+        .machine-card .title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .machine-card .specs {
+            font-size: 0.9rem;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        .machine-card .description {
+            font-size: 1rem;
+            color: #FFFFFF;
+        }
+
+        @media (max-width: 720px) {
+            .machines-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .extras-section {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 40px;
+        }
+
+        .contact-form {
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-form input, .contact-form textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            color: #fff;
+            font-family: inherit;
+        }
+
+        .contact-form button {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        footer {
+            padding-top: 0;
+            padding-bottom: 8rem;
+        }
+
+        .footer-p {
+            max-width: 65ch;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        @media (max-width: 720px) {
+            section {
+                padding: 60px 0;
+            }
+            .why-section {
+                grid-template-columns: 1fr;
+            }
+            .machines-table {
+                display: block;
+            }
+            .machines-table th, .machines-table td {
+                display: block;
+                width: 100%;
+                border: none;
+                border-bottom: 1px solid var(--border);
+                padding: 0.75rem 0;
+            }
+            h1 {
+                font-size: 3rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <canvas id="bg"></canvas>
+    <main>
+        <!-- Hero -->
+        <section id="hero">
+            <div class="container">
+                <p class="brand">WarpDancer</p>
+                <h1>Stop <span class="renting">renting</span> your intelligence. <span class="highlight no-wrap">Own</span> <span class="no-wrap">it.</span></h1>
+                <p class="subtitle">Remember when Uber rides were almost free? Investors paid for them until everyone was hooked, then the prices went up. The big AI labs are running the same playbook. Buy your own intelligence.</p>
+                <a href="mailto:magnusapaulsen@gmail.com?subject=Booking a demo of Warpdancer" class="button">Book a demo</a>
+            </div>
+        </section>
 
-<!-- Background pattern canvas. Filled in during step 3. -->
-<canvas id="bg"></canvas>
+        <!-- Why own it -->
+        <section id="why">
+            <div class="container">
+                <h2>Why own it</h2>
+                <div class="why-section">
+                    <div class="why-item">
+                        <span class="why-num">01</span>
+                    </div>
+                    <div class="why-item">
+                        <p>Cloud AI subscriptions are priced below what they cost to provide, and prices tend to rise over time, as they did with Uber and Netflix.</p>
+                    </div>
+                    <div class="why-item">
+                        <span class="why-num">02</span>
+                    </div>
+                    <div class="why-item">
+                        <p>Many companies cannot send sensitive data to an outside API. Local AI keeps it in the building.</p>
+                    </div>
+                    <div class="why-item">
+                        <span class="why-num">03</span>
+                    </div>
+                    <div class="why-item">
+                        <p>Open models you can run yourself are now close to the frontier, and a better model can be installed on the same hardware later.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<header id="hero">
-  <p class="brand">WarpDancer</p>
-  <h1>Stop <span class="renting">renting</span> your intelligence. <span class="highlight">Own</span> it.</h1>
-  <p>The big AI labs are like Uber. If you drive every day, you buy a car. We sell ready-made local AI machines, so you buy the hardware once and then pay only for electricity.</p>
-  <a href="#contact" class="button">Book a demo</a>
-</header>
+        <!-- The three machines -->
+        <section id="machines">
+            <div class="container">
+                <h2>The machines</h2>
+                <div class="machines-cards">
+                    <div class="machine-card small">
+                        <div>
+                            <h3 class="title">Small</h3>
+                            <p class="specs">about 12B model</p>
+                            <p class="specs">one RTX 5090</p>
+                            <p class="description">Optimized for chat, documents, and form processing.</p>
+                        </div>
+                    </div>
+                    <div class="machine-card medium">
+                        <div>
+                            <h3 class="title">Medium</h3>
+                            <p class="specs">about 70B model</p>
+                            <p class="specs">one RTX PRO 6000 Blackwell</p>
+                            <p class="description">Designed for everyday coding and autonomous agents.</p>
+                        </div>
+                    </div>
+                    <div class="machine-card large">
+                        <div>
+                            <h3 class="title">Large</h3>
+                            <p class="specs">close-to-frontier model</p>
+                            <p class="specs">four to eight data center GPUs</p>
+                            <p class="description">Powering heavy coding tasks on massive projects.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Optional extras -->
+        <section id="extras" class="extras-section">
+            <div class="container">
+                <h2>Optional extras</h2>
+                <p>We offer custom fine-tuning and engineer time, billed monthly.</p>
+            </div>
+        </section>
 
-<main>
+        <!-- Footer -->
+        <footer class="footer-container">
+            <p class="footer-p">This website was made entirely by a local model on a small machine.</p>
+        </footer>
+    </main>
 
-  <section id="why">
-    <h2>Why own it</h2>
+    <script>
+        const DOT_SPACING = 28;      // pixels between dots
+        const DOT_SIZE = 1.6;        // base radius in pixels
+        const MOUSE_RADIUS = 140;    // how far the cursor reaches
+        const MOUSE_STRENGTH = 2.2;  // how hard dots are pushed away
+        const DRIFT_SPEED = 0.0004;  // speed of the automatic motion when no mouse
 
-    <div class="point">
-      <span class="label">01</span>
-      <p>Cloud AI subscriptions are priced below what they cost to provide, and prices tend to rise over time, as they did with Uber and Netflix. A machine you own does not get more expensive.</p>
-    </div>
+        const canvas = document.getElementById('bg');
+        const ctx = canvas.getContext('2d');
+        const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00FF88';
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    <div class="point">
-      <span class="label">02</span>
-      <p>Many companies cannot send sensitive data to an outside API. Local AI keeps your data in your building.</p>
-    </div>
+        let w = 0, h = 0, dots = [];
+        const mouse = { x: -9999, y: -9999, active: false };
 
-    <div class="point">
-      <span class="label">03</span>
-      <p>Open models you can run yourself are now close to the frontier, and a better model can be installed on the same hardware later.</p>
-    </div>
-  </section>
+        function build() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          w = window.innerWidth;
+          h = window.innerHeight;
+          canvas.width = w * dpr;
+          canvas.height = h * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  <section id="machines">
-    <h2>The three machines</h2>
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th>Small</th>
-          <th>Medium</th>
-          <th>Large</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>Model</th>
-          <td>About 12B</td>
-          <td>About 70B</td>
-          <td>Close to frontier</td>
-        </tr>
-        <tr>
-          <th>GPU</th>
-          <td>One RTX 5090</td>
-          <td>One RTX PRO 6000 Blackwell</td>
-          <td>Four to eight data center GPUs</td>
-        </tr>
-        <tr>
-          <th>Best for</th>
-          <td>Chat, documents and forms</td>
-          <td>Everyday coding and agents</td>
-          <td>Heavy coding on big projects</td>
-        </tr>
-      </tbody>
-    </table>
-    <p>All three run the same agent harness and use open weights.</p>
-  </section>
+          let spacing = DOT_SPACING;
+          while ((w / spacing) * (h / spacing) > 3000) spacing += 2; // cap the dot count
 
-  <section id="extras">
-    <h2>Optional extras</h2>
-    <p>If you want a model tuned to your own work, an engineer sets it up for you. Custom fine-tuning and engineer time are billed monthly, because the tuning has to be repeated as your data changes.</p>
-  </section>
+          dots = [];
+          for (let y = spacing / 2; y < h; y += spacing) {
+            for (let x = spacing / 2; x < w; x += spacing) {
+              dots.push({ hx: x, hy: y, x: x, y: y, vx: 0, vy: 0 });
+            }
+          }
+        }
 
-  <section id="contact">
-    <h2>Book a demo</h2>
-    <form>
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name">
+        function frame(time) {
+          // No real mouse: a virtual cursor drifts across the screen.
+          if (!mouse.active) {
+            mouse.x = w / 2 + Math.cos(time * DRIFT_SPEED * 3) * w * 0.35;
+            mouse.y = h / 2 + Math.sin(time * DRIFT_SPEED * 5) * h * 0.30;
+          }
 
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email">
+          ctx.clearRect(0, 0, w, h);
+          ctx.fillStyle = accent;
 
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="5"></textarea>
+          for (const d of dots) {
+            const dx = d.x - mouse.x;
+            const dy = d.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            let near = 0;
 
-      <button type="submit" class="button">Send</button>
-    </form>
-  </section>
+            if (dist < MOUSE_RADIUS) {
+              near = 1 - dist / MOUSE_RADIUS;
+              d.vx += (dx / dist) * near * MOUSE_STRENGTH;
+              d.vy += (dy / dist) * near * MOUSE_STRENGTH;
+            }
 
-</main>
+            // spring back to the home position, with damping
+            d.vx += (d.hx - d.x) * 0.06;
+            d.vy += (d.hy - d.y) * 0.06;
+            d.vx *= 0.82;
+            d.vy *= 0.82;
+            d.x += d.vx;
+            d.y += d.vy;
 
-<footer>
-  <p>WarpDancer, 2026</p>
-</footer>
+            ctx.globalAlpha = 0.18 + 0.82 * near;
+            ctx.beginPath();
+            ctx.arc(d.x, d.y, DOT_SIZE * (1 + near * 1.5), 0, Math.PI * 2);
+            ctx.fill();
+          }
 
-<script>
-/* ==========================================================
-   CONFIG: pattern settings. Used in step 3.
-   ========================================================== */
-const DOT_SPACING = 28;
-const DOT_SIZE = 1.6;
-const MOUSE_RADIUS = 140;
-const MOUSE_STRENGTH = 2.2;
-const DRIFT_SPEED = 0.0004;
+          ctx.globalAlpha = 1;
+          requestAnimationFrame(frame);
+        }
 
-const canvas = document.getElementById('bg');
-const ctx = canvas.getContext('2d');
-const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00FF88';
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        function drawStatic() {
+          ctx.clearRect(0, 0, w, h);
+          ctx.fillStyle = accent;
+          ctx.globalAlpha = 0.18;
+          for (const d of dots) {
+            ctx.beginPath();
+            ctx.arc(d.hx, d.hy, DOT_SIZE, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+        }
 
-let w = 0, h = 0, dots = [];
-const mouse = { x: -9999, y: -9999, active: false };
+        window.addEventListener('pointermove', (e) => {
+          mouse.x = e.clientX;
+          mouse.y = e.clientY;
+          mouse.active = true;
+        });
+        document.addEventListener('mouseleave', () => { mouse.active = false; });
+        window.addEventListener('pointerup', (e) => { if (e.pointerType === 'touch') mouse.active = false; });
+        window.addEventListener('resize', () => { build(); if (reduceMotion) drawStatic(); });
 
-function build() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  w = window.innerWidth;
-  h = window.innerHeight;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        build();
+        if (reduceMotion) drawStatic();
+        else requestAnimationFrame(frame);
 
-  let spacing = DOT_SPACING;
-  while ((w / spacing) * (h / spacing) > 3000) spacing += 2; // cap the dot count
-
-  dots = [];
-  for (let y = spacing / 2; y < h; y += spacing) {
-    for (let x = spacing / 2; x < w; x += spacing) {
-      dots.push({ hx: x, hy: y, x: x, y: y, vx: 0, vy: 0 });
-    }
-  }
-}
-
-function frame(time) {
-  // No real mouse: a virtual cursor drifts across the screen.
-  if (!mouse.active) {
-    mouse.x = w / 2 + Math.cos(time * DRIFT_SPEED * 3) * w * 0.35;
-    mouse.y = h / 2 + Math.sin(time * DRIFT_SPEED * 5) * h * 0.30;
-  }
-
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = accent;
-
-  for (const d of dots) {
-    const dx = d.x - mouse.x;
-    const dy = d.y - mouse.y;
-    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-    let near = 0;
-
-    if (dist < MOUSE_RADIUS) {
-      near = 1 - dist / MOUSE_RADIUS;
-      d.vx += (dx / dist) * near * MOUSE_STRENGTH;
-      d.vy += (dy / dist) * near * MOUSE_STRENGTH;
-    }
-
-    // spring back to the home position, with damping
-    d.vx += (d.hx - d.x) * 0.06;
-    d.vy += (d.hy - d.y) * 0.06;
-    d.vx *= 0.82;
-    d.vy *= 0.82;
-    d.x += d.vx;
-    d.y += d.vy;
-
-    ctx.globalAlpha = 0.18 + 0.82 * near;
-    ctx.beginPath();
-    ctx.arc(d.x, d.y, DOT_SIZE * (1 + near * 1.5), 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  ctx.globalAlpha = 1;
-  requestAnimationFrame(frame);
-}
-
-function drawStatic() {
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = accent;
-  ctx.globalAlpha = 0.18;
-  for (const d of dots) {
-    ctx.beginPath();
-    ctx.arc(d.hx, d.hy, DOT_SIZE, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.globalAlpha = 1;
-}
-
-window.addEventListener('pointermove', (e) => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-  mouse.active = true;
-});
-document.addEventListener('mouseleave', () => { mouse.active = false; });
-window.addEventListener('pointerup', (e) => { if (e.pointerType === 'touch') mouse.active = false; });
-window.addEventListener('resize', () => { build(); if (reduceMotion) drawStatic(); });
-
-build();
-if (reduceMotion) drawStatic();
-else requestAnimationFrame(frame);
-</script>
-
+        const cards = document.querySelectorAll('.machine-card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / (rect.height / 2) * -10;
+                const rotateY = (x - centerX) / (rect.width / 2) * 10;
+                
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+            });
+        });
+    </script>
 </body>
 </html>

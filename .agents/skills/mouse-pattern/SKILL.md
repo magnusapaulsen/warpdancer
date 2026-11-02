@@ -1,6 +1,6 @@
 ---
 name: mouse-pattern
-description: Use in step 3 of the workflow. Adds a full-screen canvas dot grid that reacts to the mouse. Copy the snippet, then only change the CONFIG values.
+description: Use whenever you add, change or debug the mouse-reactive dot background on the WarpDancer site (the full-screen canvas with id bg). Contains the full working code and the values that tune it.
 ---
 
 # Mouse-reactive background pattern
@@ -137,6 +137,20 @@ else requestAnimationFrame(frame);
 - The pattern uses the accent color only. No second color.
 - Do not add libraries.
 - To change the look, edit CONFIG values. Examples: larger `DOT_SPACING` for a calmer look, larger `MOUSE_RADIUS` for a wider reaction.
+
+## Adding it to the page
+
+The full script is long. Add it in small edits, not one big edit: first the HTML tag and the CSS, then the setup code (down to `build()`), then `frame()` and `drawStatic()`, then the event listeners and the start lines. Copy the code exactly.
+
+## Common changes (use small edits, never rewrite the script)
+
+- Calmer pattern: raise `DOT_SPACING` (for example 36) or lower `DOT_SIZE`.
+- Denser pattern: lower `DOT_SPACING` (the script already caps the dot count at about 3000).
+- Wider reaction: raise `MOUSE_RADIUS`. Stronger push: raise `MOUSE_STRENGTH`.
+- Faster idle movement: raise `DRIFT_SPEED`.
+- Pull the dots toward the cursor instead of pushing them away: in `frame()`, change the two lines `d.vx += (dx / dist) * near * MOUSE_STRENGTH;` and `d.vy += (dy / dist) * near * MOUSE_STRENGTH;` from `+=` to `-=`.
+- Short lines instead of dots: in `frame()`, replace the `ctx.arc(...)` drawing with `ctx.moveTo(d.x, d.y)` and `ctx.lineTo(d.x + 6, d.y)`, then `ctx.stroke()` instead of `ctx.fill()`, and set `ctx.strokeStyle = accent`.
+- The pattern must keep using only the accent color, and the content must stay above the canvas.
 
 ## Check
 
