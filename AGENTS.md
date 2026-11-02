@@ -52,7 +52,7 @@ Do not invent prices, speeds, benchmarks, customers, quotes or awards. If a fact
 ## Design rules
 
 - Background `#000000`. Main text `#FFFFFF`. Secondary text and borders: white at lower opacity only.
-- Exactly ONE accent color, set once as `--accent` (default `#00FF88`). Use it for: the button, links, one highlight word in the hero, and the background pattern. Nowhere else.
+- Use two accent colors: a green accent (`--accent`, default `#00FF88`) and a red accent (`--red`, default `#FF0040`). Use green for the button, links, one highlight word in the hero, and the background pattern. Use red for specific highlights like "renting".
 - Left-aligned text. Line width at most about 65 characters. Large headings, generous whitespace.
 - Sections must not all look the same. Vary the layout between sections.
 - Must work on a phone screen and a wide desktop screen.
@@ -69,7 +69,7 @@ Do not invent prices, speeds, benchmarks, customers, quotes or awards. If a fact
 
 Put this at the very top of the file, clearly commented, so the owner can tune the look by editing numbers.
 
-CSS variables: `--accent`, `--bg`, `--text`, `--muted`.
+CSS variables: `--accent` (green), `--red`, `--bg`, `--text`, `--muted`.
 
 JS constants: `DOT_SPACING`, `DOT_SIZE`, `MOUSE_RADIUS`, `MOUSE_STRENGTH`, `DRIFT_SPEED`.
 
@@ -97,7 +97,7 @@ Before saying you are done, verify each item by reading the file:
 
 - [ ] Single file `index.html`, no external requests
 - [ ] Background is exactly `#000000`, main text exactly `#FFFFFF`
-- [ ] Only one accent color is used
+- [ ] Only the two specified accent colors (green and red) are used
 - [ ] No em dash or en dash anywhere (search the file for the characters)
 - [ ] No "LIVE" badge or similar
 - [ ] No banned words
